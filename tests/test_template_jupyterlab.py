@@ -21,6 +21,7 @@ def test_template_jupyterlab_example_cloud():
         app_folder = os.path.join(_PROJECT_ROOT, "examples/template_jupyterlab")
     else:
         app_folder = os.path.dirname(os.path.dirname(__file__))
+    print(app_folder)
     with run_app_in_cloud(app_folder) as (_, view_page, _):
         def create_notebook():
             # 1. Locate the iframe
