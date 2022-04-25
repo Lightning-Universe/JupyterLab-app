@@ -2,3 +2,6 @@
 .shared
 .ipynb_checkpoints
 .git
+videos
+hars
+jupyter_lab*
