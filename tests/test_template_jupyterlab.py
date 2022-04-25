@@ -61,8 +61,6 @@ def test_template_jupyterlab_example_cloud():
         button.click()
         view_page.reload()
         sleep(5)
-        divs = iframe.locator('div')
-        divs.wait_for(timeout=1 * 1000)
         found_jupyterlab = False
         for content in iframe.locator('div').all_text_contents():
             if "JupyterLab" in content:
