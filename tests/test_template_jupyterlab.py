@@ -15,7 +15,7 @@ def wait_for(page, callback):
             page.reload()
             sleep(2)
 
-def test_app_in_cloud():
+def test_template_jupyterlab_example_cloud():
     with run_app_in_cloud(os.path.dirname(os.path.dirname(__file__))) as (_, view_page, _):
         def create_notebook():
             # 1. Locate the iframe
