@@ -1,6 +1,7 @@
 import os
 from time import sleep
 import playwright
+from lightning import _PROJECT_ROOT
 from lightning.testing.testing import run_app_in_cloud
 
 def wait_for(page, callback):
@@ -16,7 +17,11 @@ def wait_for(page, callback):
             sleep(2)
 
 def test_template_jupyterlab_example_cloud():
-    with run_app_in_cloud(os.path.dirname(os.path.dirname(__file__))) as (_, view_page, _):
+    if "TEST_APP_NAME" is os.environ:
+        app_folder = os.path.join(_PROJECT_ROOT, "examples/template_jupyterlab")
+    else:
+        app_folder = os.path.dirname(os.path.dirname(__file__))
+    with run_app_in_cloud(app_folder) as (_, view_page, _):
         def create_notebook():
             # 1. Locate the iframe
             iframe = view_page.frame_locator("iframe")
