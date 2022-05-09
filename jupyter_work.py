@@ -12,9 +12,7 @@ logger = logging.getLogger(__name__)
 
 class JupyterWork(LightningWork):
     def __init__(self, host: str = "0.0.0.0", port: int = 8888, cloud_compute: Optional[CloudCompute] = None):
-        super().__init__(exposed_ports={"jupyter": port}, cloud_compute=cloud_compute, blocking=False)
-        self.host = host
-        self.port = port
+        super().__init__(host=host, port=port, cloud_compute=cloud_compute, blocking=False)
         self.pid = None
         self.token = None
         self.exit_code = None
@@ -50,7 +48,7 @@ class JupyterWork(LightningWork):
                 bufsize=0,
                 close_fds=True,
                 stdout=f,
-                stderr=f
+                stderr=f,
             )
 
         with open(f"jupyter_lab_{self.port}", 'r') as f:
