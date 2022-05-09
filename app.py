@@ -31,9 +31,6 @@ class JupyterLabManager(LightningFlow):
 
 def render_fn(state: AppState):
     import streamlit as st
-    from streamlit_autorefresh import st_autorefresh
-
-    st_autorefresh(interval=1000, limit=None, key="refresh")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -74,7 +71,7 @@ class RootFlow(LightningFlow):
     def configure_layout(self) -> List[Dict]:
         layout = [{"name": "Manager", "content": self.manager}]
         for idx, work in enumerate(self.manager.works()):
-            jupyter_url = work.exposed_url("jupyter")
+            jupyter_url = work.url
             jupyter_url = jupyter_url + "/lab" if jupyter_url else jupyter_url
             layout.append(
                 {"name": f"JupyterLab {idx}", "content": jupyter_url}
