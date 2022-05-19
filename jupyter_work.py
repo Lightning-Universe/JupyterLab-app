@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class JupyterWork(LightningWork):
     def __init__(self, host: str = "0.0.0.0", port: int = 8888, cloud_compute: Optional[CloudCompute] = None):
-        super().__init__(host=host, port=port, cloud_compute=cloud_compute, blocking=False)
+        super().__init__(host=host, port=port, cloud_compute=cloud_compute, parallel=True)
         self.pid = None
         self.token = None
         self.exit_code = None
