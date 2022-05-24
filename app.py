@@ -9,8 +9,7 @@ class JupyterLabManager(L.LightningFlow):
         self.user_notebook_configs = []
 
     def run(self):
-        for jupyter_config in self.user_notebook_configs:
-
+        for idx, jupyter_config in enumerate(self.user_notebook_configs):
             username = jupyter_config["username"]
             if username not in self.notebooks_session:
                 jupyter_config["ready"] = False
@@ -22,7 +21,8 @@ class JupyterLabManager(L.LightningFlow):
                 jupyter_config["token"] = self.notebooks_session[username].token
 
             if jupyter_config['stop']:
-                self.notebooks_session[username].run()
+                self.notebooks_session[username].stop()
+                self.user_notebook_configs.pop(idx)
 
     def configure_layout(self):
         return L.frontend.StreamlitFrontend(render_fn=render_fn)
@@ -44,29 +44,26 @@ def render_fn(state):
     if create_jupyter:
         state.user_notebook_configs = state.user_notebook_configs + [{"use_gpu": use_gpu, "token": None, "username": username, "stop": False}]
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
     with col1:
         st.write(f"Idx")
     with col2:
         st.write(f"Use GPU")
     with col3:
-        st.write(f"Token")
-    with col4:
         st.write(f"Stop")
 
     for idx, config in enumerate(state.user_notebook_configs):
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3 = st.columns(3)
         with col1:
             st.write(f"{idx}")
         with col2:
             st.write(config['use_gpu'])
         with col3:
-            st.write(config["token"])
-        with col4:
             if config["token"]:
                 should_stop = st.button("Do you want to stop the notebook")
                 if should_stop:
                     config["stop"] = should_stop
+                    state.user_notebook_configs = state.user_notebook_configs
 
 class RootFlow(L.LightningFlow):
 
@@ -79,10 +76,13 @@ class RootFlow(L.LightningFlow):
 
     def configure_layout(self):
         layout = [{"name": "Manager", "content": self.manager}]
-        for username, jupyter_work in self.manager.notebooks_session.items():
-            layout.append(
-                {"name": f"JupyterLab {username}", "content": jupyter_work.url + "/lab"}
-            )
+        for config in self.manager.user_notebook_configs:
+            if not config['stop']:
+                username = config['username']
+                jupyter_work = self.manager.notebooks_session[username]
+                layout.append(
+                    {"name": f"JupyterLab {username}", "content": jupyter_work.url + "/lab"}
+                )
         return layout
 
 
