@@ -81,7 +81,7 @@ class RootFlow(L.LightningFlow):
                 username = config['username']
                 jupyter_work = self.manager.notebooks_session[username]
                 layout.append(
-                    {"name": f"JupyterLab {username}", "content": jupyter_work.url + "/lab"}
+                    {"name": f"JupyterLab {username}", "content": jupyter_work}
                 )
         return layout
 
