@@ -1,6 +1,6 @@
-# Lightning Jupyter Lab Template
+# Lightning JupyterLab Manager
 
-This template app demonstrates how to create JupyterLab notebook with Lightning and manage them.
+This template app demonstrates how to create JupyterLab notebook with Lightning and manage them for multiple users.
 
 <div align="center">
   <img src="https://pl-flash-data.s3.amazonaws.com/assets_lightning/jupyterlab_app.gif" max-height="600px">
