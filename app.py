@@ -127,8 +127,8 @@ def render_fn(state):
         col1, col2, col3 = st.columns(3)
         with col1:
             if not idx:
-                st.write(f"Idx")
-            st.write(f"{idx}")
+                st.write(f"Username")
+            st.write(config['username'])
         with col2:
             if not idx:
                 st.write(f"Use GPU")
@@ -137,7 +137,7 @@ def render_fn(state):
             if not idx:
                 st.write(f"Stop")
             if config["token"]:
-                should_stop = st.button("Stop this notebook")
+                should_stop = st.button("Stop this notebook", key=str(idx))
 
                 # Step 4: Change stop if the user clicked the button
                 if should_stop:

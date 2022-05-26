@@ -34,17 +34,22 @@ def test_template_jupyterlab_example_cloud():
         wait_for(view_page, create_notebook)
 
         def wait_for_new_iframe():
-            button = view_page.locator('button:has-text("JUPYTERLAB tchaton")')
+            button = view_page.locator('button:has-text("JUPYTERLAB TCHATON")')
             button.wait_for(timeout=5 * 1000)
             button.click()
             return True
 
         wait_for(view_page, wait_for_new_iframe)
 
-        # 4. Open the jupyter lab tab
-        iframe = view_page.frame_locator("iframe")
-        found_jupyterlab = False
-        for content in iframe.locator('div').all_text_contents():
-            if "JupyterLab" in content:
-                found_jupyterlab = True
-        assert found_jupyterlab
+        def found_jupyterlab():
+            # 4. Open the jupyter lab tab
+            iframe = view_page.frame_locator("iframe")
+            div = iframe.locator('div >> nth=0')
+            div.wait_for(timeout=5 * 1000)
+            found_jupyterlab = False
+            for content in iframe.locator('div').all_text_contents():
+                if "JupyterLab" in content:
+                    found_jupyterlab = True
+            return found_jupyterlab
+
+        wait_for(view_page, found_jupyterlab)
