@@ -83,7 +83,7 @@ class JupyterLabManager(L.LightningFlow):
                 jupyter_config["ready"] = False
 
                 # User can select GPU or CPU.
-                cloud_compute = L.CloudCompute("gpu" if jupyter_config["use_gpu"] else "cpu", 1)
+                cloud_compute = L.CloudCompute("gpu" if jupyter_config["use_gpu"] else "default")
 
                 # HERE: We are creating the work dynamically !
                 self.jupyter_works[username] = JupyterLabWork(cloud_compute=cloud_compute)
@@ -111,7 +111,7 @@ def render_fn(state):
     with col1:
         create_jupyter = st.button("Create Jupyter Notebook")
     with col2:
-        username = st.text_input('Enter your username', "tchaton")
+        username = st.text_input('Enter your name', "tchaton")
         assert username
     with col3:
         use_gpu = st.checkbox('Use GPU')

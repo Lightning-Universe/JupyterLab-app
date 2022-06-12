@@ -1,20 +1,7 @@
 import os
-from time import sleep
-import playwright
 from lightning import _PROJECT_ROOT
-from lightning.testing.testing import run_app_in_cloud
+from lightning.testing.testing import run_app_in_cloud, wait_for
 
-def wait_for(page, callback):
-    while True:
-        try:
-            res = callback()
-            if res:
-                return res
-        except (playwright._impl._api_types.Error, playwright._impl._api_types.TimeoutError) as e:
-            print(e)
-            sleep(5)
-            page.reload()
-            sleep(2)
 
 def test_template_jupyterlab_example_cloud():
     if os.getenv("TEST_APP_NAME", None):
@@ -22,7 +9,7 @@ def test_template_jupyterlab_example_cloud():
     else:
         app_folder = os.path.dirname(os.path.dirname(__file__))
     with run_app_in_cloud(app_folder) as (_, view_page, _):
-        def create_notebook():
+        def create_notebook(*_, **__):
             # 1. Locate the iframe
             iframe = view_page.frame_locator("iframe")
             # 2. Create a notebook
@@ -33,7 +20,7 @@ def test_template_jupyterlab_example_cloud():
 
         wait_for(view_page, create_notebook)
 
-        def wait_for_new_iframe():
+        def wait_for_new_iframe(*_, **__):
             button = view_page.locator('button:has-text("JUPYTERLAB TCHATON")')
             button.wait_for(timeout=5 * 1000)
             button.click()
@@ -41,7 +28,7 @@ def test_template_jupyterlab_example_cloud():
 
         wait_for(view_page, wait_for_new_iframe)
 
-        def found_jupyterlab():
+        def found_jupyterlab(*_, **__):
             # 4. Open the jupyter lab tab
             iframe = view_page.frame_locator("iframe")
             div = iframe.locator('div >> nth=0')
