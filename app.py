@@ -1,4 +1,7 @@
-import lightning as L
+from lightning.app.storage import Path
+from lightning.app.structures import Dict
+from lightning import CloudCompute, LightningApp, LightningFlow, LightningWork
+from lightning.app.frontend import StreamlitFrontend
 import logging
 import os
 import subprocess
@@ -8,8 +11,8 @@ from typing import Optional
 logger = logging.getLogger(__name__)
 
 
-class JupyterLabWork(L.LightningWork):
-    def __init__(self, cloud_compute: Optional[L.CloudCompute] = None):
+class JupyterLabWork(LightningWork):
+    def __init__(self, cloud_compute: Optional[CloudCompute] = None):
         super().__init__(cloud_compute=cloud_compute, parallel=True)
         self.pid = None
         self.token = None
@@ -17,9 +20,9 @@ class JupyterLabWork(L.LightningWork):
         self.storage = None
 
     def run(self):
-        self.storage = L.storage.Path(".")
+        self.storage = Path(".")
 
-        jupyter_notebook_config_path = L.storage.Path.home() / ".jupyter/jupyter_notebook_config.py"
+        jupyter_notebook_config_path = Path.home() / ".jupyter/jupyter_notebook_config.py"
 
         if os.path.exists(jupyter_notebook_config_path):
             os.remove(jupyter_notebook_config_path)
@@ -67,11 +70,11 @@ class JupyterLabWork(L.LightningWork):
         else:
             return f"http://{self.host}:{self.port}/lab?token={self.token}"
 
-class JupyterLabManager(L.LightningFlow):
+class JupyterLabManager(LightningFlow):
 
     def __init__(self):
         super().__init__()
-        self.jupyter_works = L.structures.Dict()
+        self.jupyter_works = Dict()
         self.jupyter_configs = []
 
     def run(self):
@@ -83,7 +86,7 @@ class JupyterLabManager(L.LightningFlow):
                 jupyter_config["ready"] = False
 
                 # User can select GPU or CPU.
-                cloud_compute = L.CloudCompute("gpu" if jupyter_config["use_gpu"] else "cpu")
+                cloud_compute = CloudCompute("gpu" if jupyter_config["use_gpu"] else "cpu")
 
                 # HERE: We are creating the work dynamically !
                 self.jupyter_works[username] = JupyterLabWork(cloud_compute=cloud_compute)
@@ -101,7 +104,7 @@ class JupyterLabManager(L.LightningFlow):
                 self.jupyter_configs.pop(idx)
 
     def configure_layout(self):
-        return L.frontend.StreamlitFrontend(render_fn=render_fn)
+        return StreamlitFrontend(render_fn=render_fn)
 
 def render_fn(state):
     import streamlit as st
@@ -144,7 +147,7 @@ def render_fn(state):
                     config["stop"] = should_stop
                     state.jupyter_configs = state.jupyter_configs
 
-class RootFlow(L.LightningFlow):
+class RootFlow(LightningFlow):
 
     def __init__(self):
         super().__init__()
@@ -165,4 +168,4 @@ class RootFlow(L.LightningFlow):
         return layout
 
 
-app = L.LightningApp(RootFlow())
+app = LightningApp(RootFlow())
