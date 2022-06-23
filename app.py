@@ -4,6 +4,7 @@ from lightning import CloudCompute, LightningApp, LightningFlow, LightningWork
 from lightning.app.frontend import StreamlitFrontend
 import logging
 import os
+import re
 import subprocess
 import sys
 from typing import Optional
@@ -122,6 +123,8 @@ def render_fn(state):
     # Step 2: If a user clicked the button, add an element to the list of configs
     # Note: state.jupyter_configs = ... will sent the state update to the component.
     if create_jupyter:
+        # Make username url friendly
+        username = re.sub("[^0-9a-zA-Z]+", "_", username)
         new_config = [{"use_gpu": use_gpu, "token": None, "username": username, "stop": False}]
         state.jupyter_configs = state.jupyter_configs + new_config
 
