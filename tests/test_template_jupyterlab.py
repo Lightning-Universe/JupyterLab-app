@@ -1,5 +1,5 @@
 import os
-from tests_app import _PROJECT_ROOT
+from lightning.app import _PROJECT_ROOT
 from lightning.app.testing.testing import run_app_in_cloud, wait_for
 
 
