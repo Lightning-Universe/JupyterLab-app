@@ -87,7 +87,7 @@ class JupyterLabManager(LightningFlow):
                 jupyter_config["ready"] = False
 
                 # User can select GPU or CPU.
-                cloud_compute = CloudCompute("gpu" if jupyter_config["use_gpu"] else "cpu-small")
+                cloud_compute = CloudCompute("gpu" if jupyter_config["use_gpu"] else "default")
 
                 # HERE: We are creating the work dynamically !
                 self.jupyter_works[username] = JupyterLabWork(cloud_compute=cloud_compute)
