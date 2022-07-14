@@ -1,6 +1,6 @@
 import os
-from lightning.app import _PROJECT_ROOT
-from lightning.app.testing.testing import run_app_in_cloud, wait_for
+from lightning_app import _PROJECT_ROOT
+from lightning_app.testing.testing import run_app_in_cloud, wait_for
 
 
 def test_template_jupyterlab_example_cloud():
