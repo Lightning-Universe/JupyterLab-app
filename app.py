@@ -43,12 +43,12 @@ class JupyterLabWork(LightningWork):
 
         with open(jupyter_notebook_config_path, "a") as f:
             f.write(
-                f"{sys.executable} -m jupyter lab --ip {self.host} --port {self.port} --no-browser --config={jupyter_notebook_config_path}".split(" "),
+                """c.NotebookApp.tornado_settings = {'headers': {'Content-Security-Policy': "frame-ancestors * 'self' "}}"""  # noqa E501
             )
 
         with open(f"jupyter_lab_{self.port}", "w") as f:
             proc = subprocess.Popen(
-                f"{sys.executable} -m jupyter lab --ip {self.host} --port {self.port} --no-browser".split(" "),
+                f"{sys.executable} -m jupyter lab --ip {self.host} --port {self.port} --no-browser --config={jupyter_notebook_config_path}".split(" "),
                 bufsize=0,
                 close_fds=True,
                 stdout=f,
