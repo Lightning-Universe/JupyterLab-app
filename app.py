@@ -48,7 +48,7 @@ class JupyterLabWork(LightningWork):
 
         with open(f"jupyter_lab_{self.port}", "w") as f:
             proc = subprocess.Popen(
-                f"{sys.executable} -m jupyter lab --ip {self.host} --port {self.port} --no-browser".split(" "),
+                f"{sys.executable} -m jupyter lab --ip {self.host} --port {self.port} --no-browser --config={jupyter_notebook_config_path}".split(" "),
                 bufsize=0,
                 close_fds=True,
                 stdout=f,
