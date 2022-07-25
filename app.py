@@ -83,14 +83,6 @@ class JupyterLabWork(LightningWork):
             return f"http://{self.host}:{self.port}/lab?token={self.token}"
 
 
-
-class JupyterConfig(TypedDict):
-    username: str
-    accelerator_type: str
-    current_state: str
-    desired_state: str
-
-
 @dataclass
 class Event:
     name: Optional[str] = None
@@ -105,11 +97,6 @@ class Event:
 class NotebookCreationRequestedEvent(Event):
     username: str = None
     accelerator_type: str = None
-
-@dataclass
-class NotebookCreationFailedEvent(Event):
-    username: str = None
-    error_message: str = None
 
 
 @dataclass
