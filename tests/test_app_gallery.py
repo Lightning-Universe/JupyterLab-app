@@ -193,14 +193,16 @@ def validate_app_functionalities(app_page: "Page") -> None:
     # Jupyter Notebook is created.
     assert jupyters.count() == 1
 
-def test_launch_app_from_gallery():
-    app_name = os.getenv("TEST_APP_NAME", None)
-    if app_name is None:
-        raise ValueError("TEST_APP_NAME environment variable is not set")
 
-    with get_gallery_app_page(app_name) as gallery_page:
-        with launch_from_gallery_app_page(gallery_page) as app_page:
-            validate_app_functionalities(app_page)
+# TODO: when the launch button works with the app.
+# def test_launch_app_from_gallery():
+#     app_name = os.getenv("TEST_APP_NAME", None)
+#     if app_name is None:
+#         raise ValueError("TEST_APP_NAME environment variable is not set")
+#
+#     with get_gallery_app_page(app_name) as gallery_page:
+#         with launch_from_gallery_app_page(gallery_page) as app_page:
+#             validate_app_functionalities(app_page)
 
 
 def test_clone_and_run_app_from_gallery():
