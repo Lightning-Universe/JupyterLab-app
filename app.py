@@ -4,6 +4,7 @@ from lightning import CloudCompute, LightningApp, LightningFlow, LightningWork
 from lightning.app.frontend import StreamlitFrontend
 import logging
 import os
+import re
 import subprocess
 import sys
 from typing import Optional
@@ -47,7 +48,7 @@ class JupyterLabWork(LightningWork):
 
         with open(f"jupyter_lab_{self.port}", "w") as f:
             proc = subprocess.Popen(
-                f"{sys.executable} -m jupyter lab --ip {self.host} --port {self.port} --no-browser".split(" "),
+                f"{sys.executable} -m jupyter lab --ip {self.host} --port {self.port} --no-browser --config={jupyter_notebook_config_path}".split(" "),
                 bufsize=0,
                 close_fds=True,
                 stdout=f,
@@ -86,7 +87,7 @@ class JupyterLabManager(LightningFlow):
                 jupyter_config["ready"] = False
 
                 # User can select GPU or CPU.
-                cloud_compute = CloudCompute("gpu" if jupyter_config["use_gpu"] else "cpu")
+                cloud_compute = CloudCompute("gpu" if jupyter_config["use_gpu"] else "default")
 
                 # HERE: We are creating the work dynamically !
                 self.jupyter_works[username] = JupyterLabWork(cloud_compute=cloud_compute)
@@ -122,6 +123,8 @@ def render_fn(state):
     # Step 2: If a user clicked the button, add an element to the list of configs
     # Note: state.jupyter_configs = ... will sent the state update to the component.
     if create_jupyter:
+        # Make username url friendly
+        username = re.sub("[^0-9a-zA-Z]+", "_", username)
         new_config = [{"use_gpu": use_gpu, "token": None, "username": username, "stop": False}]
         state.jupyter_configs = state.jupyter_configs + new_config
 

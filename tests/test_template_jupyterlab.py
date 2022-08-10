@@ -1,11 +1,11 @@
 import os
-from lightning import _PROJECT_ROOT
-from lightning.app.testing.testing import run_app_in_cloud, wait_for
+from lightning_app import _PROJECT_ROOT
+from lightning_app.testing.testing import run_app_in_cloud, wait_for
 
 
 def test_template_jupyterlab_example_cloud():
     if os.getenv("TEST_APP_NAME", None):
-        app_folder = os.path.join(_PROJECT_ROOT, "examples/template_jupyterlab")
+        app_folder = os.path.join(_PROJECT_ROOT, "examples/app_template_jupyterlab")
     else:
         app_folder = os.path.dirname(os.path.dirname(__file__))
     with run_app_in_cloud(app_folder) as (_, view_page, *_):
